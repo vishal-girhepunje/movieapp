@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movie 1</title>
+    <style>
+        #search {
+            width: 80%;
+            margin: auto;
+            display: block;
+            font-size: 30px;
+            border: 2px solid black;
+            margin-bottom: 30px;
+        }
+
+        body {
+            background-color: #0c111b;
+            color: white;
+            height: 100vh;
+        }
+
+        #main {
+            display: flex;
+            justify-content: center;
+            border: 0px solid red;
+            width: 800px;
+            margin: auto;
+        }
+
+        button {
+            margin: auto;
+            display: block;
+            margin-bottom: 30px;
+            background-color: #1f80e0;
+            color: white;
+            border: 0;
+            width: 200px;
+            padding: 10px 0 10px 0;
+        }
+
+        #text {
+            text-align: left;
+        }
+
+        #mov {
+            text-align: center;
+            font-size: 100px;
+        }
+
+        #main>div {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="mov">Movies</h1>
+    <input type="text" id="search" placeholder="search">
+    <button onclick="my_Input()">Search</button>
+    <div id="main"></div>
+</body>
+
+</html>
+<script>
+    let bag = [];
+    let x
+    function my_Input() {
+        let url = "http://www.omdbapi.com/?i=tt3896198&apikey=869ad1a8"
+        let x = document.querySelector("#search").value
+        url = url + "&t=" + x
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                display(result)
+
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    function display(result) {
+        if (result.Title == undefined || result.Poster == undefined) {
+            document.querySelector("#main").innerHTML = ""
+            let x = document.createElement("img")
+            document.querySelector("#main").style.display = "block"
+            document.querySelector("#main").style.textAlign = "center"
+            x.setAttribute("src", "https://media.giphy.com/media/XIahGhbK5A685fyr8D/giphy.gif")
+            let t = document.createElement("h2")
+            t.innerText = "Movie Not Found"
+            document.querySelector("#main").append(t, x)
+        } else {
+            document.querySelector("#main").innerHTML = ""
+            let div = document.createElement("div");
+            div.innerHTML = ""
+            div.setAttribute("class", "pos")
+            let div2 = document.createElement("div");
+            div2.innerHTML = ""
+            div2.setAttribute("class", "text")
+            let title = document.createElement("h1")
+            title.innerText = result.Title
+            let poster = document.createElement("img")
+            poster.setAttribute("src", result.Poster)
+            let cast = document.createElement("p")
+            cast.innerText = "Cast: " + result.Actors
+            let director = document.createElement('p')
+            director.innerText = "Director: " + result.Director
+            let rate = document.createElement("p")
+            rate.innerText = "Rating: " + result.imdbRating
+            let genre = document.createElement("p")
+            genre.innerText = "Genre: " + result.Genre
+            let language = document.createElement("p")
+            language.innerText = "Language: " + result.Language
+            let Plot = document.createElement("p")
+            Plot.innerText = "Plot: " + result.Plot
+            let Writer = document.createElement("p")
+            Writer.innerText = "Writer: " + result.Writer
+            if (result.imdbRating > 8.5) {
+                console.log("Yes")
+                let rec = document.createElement("h2")
+                rec.innerText = "Recommended"
+                rec.style.color = "red"
+                div2.append(title, director, Writer, cast, rate, genre, language, Plot,rec)
+            } else {
+                div2.append(title, director, Writer, cast, rate, genre, language, Plot)
+            }
+            div.append(poster)
+
+            document.querySelector("#main").append(div, div2)
+        }
+
+
+    }
+
+
+</script>
